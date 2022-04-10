@@ -1,5 +1,4 @@
 import discord
-from discord.ext import commands
 import discord.utils
 import os
 from const import *
