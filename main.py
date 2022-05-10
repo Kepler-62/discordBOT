@@ -2,7 +2,7 @@ import discord
 import discord.utils
 from fuzzywuzzy import fuzz
 import requests
-import yandex_weather_api
+import asyncio
 import json
 from fuzzywuzzy import process
 import os
@@ -54,17 +54,26 @@ class MyClient(discord.Client):
 
         if MEMBERS[user] == 5:
             await message.channel.send(f"{user} достиг(ла) максимального количества предупреждений")
-            await self.mute(message)
+            await self.mute(message, author=True)
+            await asyncio.sleep(5)
+            await self.unmute(message, author=True)
 
-    async def mute(self, message):
-        role = discord.utils.get(message.guild.roles, id=962041876041564240)
-        user = message.mentions[0]
+
+    async def mute(self, message, author=False):
+        role = discord.utils.get(message.guild.roles, id=969861323968102410)
+        if author:
+            user = message.author
+        else:
+            user = message.mentions[0]
         await user.add_roles(role)
         await message.channel.send(f"Доступ к текстовому каналу для {user} ограничен")
 
-    async def unmute(self, message):
-        role = discord.utils.get(message.guild.roles, id=962041876041564240)
-        user = message.mentions[0]
+    async def unmute(self, message, author=False):
+        role = discord.utils.get(message.guild.roles, id=969861323968102410)
+        if author:
+            user = message.author
+        else:
+            user = message.mentions[0]
         await user.remove_roles(role)
         await message.channel.send(f"Доступ к текстовому каналу для {user} возобновлен")
 
